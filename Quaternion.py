@@ -18,7 +18,7 @@ def fromEulerAngle(euler):
         sin(phi/2)*sin(theta/2)*cos(psi/2)
 
     return np.matrix([q0, q1, q2, q3]).T
-
+# Original MATLAB code copyright comment
 # % Copyright - Carlos Montalvo 2015
 # % You may freely distribute this file but please keep my name in here
 # % as the original owner
