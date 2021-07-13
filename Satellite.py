@@ -26,12 +26,12 @@ def Model(t: float, state):
                        [q, -r, 0, p], [r, q, -p, 0]])
     q0123_dot = 0.5*PQRMAT*q0123
     q0123_dot = np.ravel(q0123_dot).T
-    kk = np.matrix([1, 2, 3]).T
+
     rv = state[0:3]
     rho: float = np.linalg.norm(rv)
     rhat = rv/rho
     Fgrav = -(G*M*m/rho**2)*rhat
-    if t % 5 == 0:
+    if t % 20 == 0:
         # Convert Cartesian x,y,z into Lat, Lon, Alt
         phiE = 0.
         thetaE = acos(z/rho)
