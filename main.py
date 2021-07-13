@@ -31,8 +31,8 @@ for i in range(len(t_out)):
 
 print("End of Simulation")
 fig = plt.figure()
-# ax = plt.axes(projection='3d')
-# ax.plot3D(xs, ys, zs, 'red')
+ax = plt.axes(projection='3d')
+ax.plot3D(xs, ys, zs, 'red')
 
 u, v = np.mgrid[0:2*np.pi:100j, 0:np.pi:50j]
 x = R*1e-3*np.cos(u)*np.sin(v)
