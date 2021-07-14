@@ -47,10 +47,14 @@ def Model(t: float, state: list[float]):
         # Convert NED (North East Down to X,Y,Z in ECI frame)
         # First we need to create a rotation matrix from the NED frame to the
         # inertial frame
-        BNED = np.matrix([BNED.north, BNED.east, BNED.down])  # ECI
-        BI = DCM.fromEulerAngle(euler=np.matrix(
-            [phiE, thetaE+pi, psiE]).T) * BNED  # Satellite Orbit
-        Model.BB = DCM.fromQuaternion(q0123).T * BI  # Satellite Body
+        BNED = np.array([BNED.north, BNED.east, BNED.down], dtype=float)
+        assert(BNED.shape == (3, 1))
+        pos_angles = np.array([[phiE, thetaE+pi, psiE]], dtype=float).T
+        assert(pos_angles.shape == (3, 1))
+        BI = DCM.fromEulerAngle(pos_angles) @ BNED
+        assert(BI.shape == (3, 1))
+        Model.BB = DCM.fromQuaternion(q0123).T @ BI
+        assert(Model.BB.shape == (3, 1))
         # Convert to Tesla
         Model.BB = Model.BB*1e-9
 
