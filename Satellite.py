@@ -62,20 +62,14 @@ def Model(t: float, state: list[float]):
     pqrMeasured = Gyroscope.Model(pqr)
     [BfieldNav, pqrNav] = Filter.Estimate(BfieldMeasured, pqrMeasured)
     accel = Fgrav/m
-    LMN_magtorquers = np.matrix([0., 0., 0.]).T
-    H = np.matmul(I, pqr)
-    # A bunch of numpy conversion to flatten states
-    pqr = pqr.T.tolist()[0]
-    H = H.T.tolist()[0]
-    c = np.matrix(np.cross(pqr, H)).T
-    pqr_dot = np.matmul(invI, (LMN_magtorquers - c))
-    _v = np.ravel(vel.T).tolist()
-    _a = np.ravel(accel).tolist()
-    _q = np.ravel(np.ravel(q0123_dot.T).tolist()).tolist()
-    _p = np.ravel(pqr_dot).tolist()
-    _s = np.concatenate((_v, _a, _q, _p))
-    dstate = _s.T
+    LMN_magtorquers = np.array([[0, 0, 0]], dtype=float).T
+    H = I @ pqr
+    c = np.cross(pqr, H, axis=0)
+    pqr_dot = invI @ (LMN_magtorquers - c)
+    q0123_dot = np.reshape(q0123_dot, (4, 1))
+    dstate = np.vstack([vel, accel, q0123_dot, pqr_dot])
+    assert(dstate.shape == (13, 1))
     return dstate
 
 
-Model.BB = np.matrix([0, 0, 0]).T
+Model.BB = np.array([[0, 0, 0]], dtype=float).T
