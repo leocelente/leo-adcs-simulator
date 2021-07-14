@@ -10,36 +10,37 @@ import Gyroscope
 import Filter
 
 m: float = 2.6
-I: np.matrix = np.diag([0.9, 0.9, 0.3])
+I = np.diag([0.9, 0.9, 0.3])
 invI = np.linalg.inv(I)
 
 
-def Model(t: float, state):
-    state = np.ravel(state.T).tolist()
-    [x, y, z] = state[0:3]
-    vel = np.matrix(state[3:6]).T
-    q0123 = np.matrix(state[6:10]).T
-    [p, q, r] = state[10:13]
-    pqr = np.matrix(state[10:13]).T
+def Model(t: float, state: list[float]):
+    assert(state.shape == (13, 1))
+    [x, y, z] = state[0:3, 0]
+    vel = state[3:6]
+    q0123 = state[6:10]
+    assert(q0123.shape == (4, 1))
+    [p, q, r] = state[10:13, 0]
+    pqr = state[10:13]
 
-    PQRMAT = np.matrix([[0, -p, -q, -r], [p, 0, r, -q],
-                       [q, -r, 0, p], [r, q, -p, 0]])
-    q0123_dot = 0.5*PQRMAT*q0123
-    q0123_dot = np.ravel(q0123_dot).T
+    PQRMAT = np.array([[0, -p, -q, -r], [p, 0, r, -q],
+                       [q, -r, 0, p], [r, q, -p, 0]],  dtype=float)
+    q0123_dot = 0.5*PQRMAT @ q0123
+    assert(q0123_dot.shape == (4, 1))
 
     rv = state[0:3]
     rho: float = np.linalg.norm(rv)
-    rhat = rv/rho
-    Fgrav = -(G*M*m/rho**2)*rhat
+    rhat: float = rv/rho
+    Fgrav: list[float] = -(G*M*m/rho**2)*rhat
     if t % 20 == 0:
         # Convert Cartesian x,y,z into Lat, Lon, Alt
-        phiE = 0.
-        thetaE = acos(z/rho)
-        psiE = atan2(y, x)
+        phiE: float = 0.
+        thetaE: float = acos(z/rho)
+        psiE: float = atan2(y, x)
 
-        latitude = 90 - thetaE * (180/pi)
-        longitude = psiE * (180/pi)
-        rho_km = (rho) / 1000
+        latitude: float = 90 - thetaE * (180/pi)
+        longitude: float = psiE * (180/pi)
+        rho_km: float = (rho) / 1000
         today = date.fromisoformat('2020-01-01')
         BNED = MagneticFieldModel(
             today, glat=latitude, glon=longitude, alt_km=rho_km, itype=0)
