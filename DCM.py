@@ -2,16 +2,17 @@ import numpy as np
 from math import cos, sin
 
 
-def fromQuaternion(quaternion):
+def fromQuaternion(quaternion: list[float]):
     # % compute R such that v(inertial) = TIB v(body)
+    assert(quaternion.shape == (4, 1))
+    [q0, q1, q2, q3] = quaternion.flat
 
-    [q0, q1, q2, q3] = quaternion.T.squeeze().tolist()[0]
-
-    DCM = np.matrix([
+    DCM = np.array([
         [(q0 ** 2+q1 ** 2-q2 ** 2-q3 ** 2), 2*(q1*q2-q0*q3), 2*(q0*q2+q1*q3)],
         [2*(q1*q2+q0*q3), (q0 ** 2-q1 ** 2+q2 ** 2-q3 ** 2), 2*(q2*q3-q0*q1)],
         [2*(q1*q3-q0*q2), 2*(q0*q1+q2*q3), (q0 ** 2-q1 ** 2-q2 ** 2+q3 ** 2)]
-    ])
+    ], dtype=float)
+    assert(DCM.shape == (3, 3))
     return DCM
 
 # % Matrix originally adopted from Boom 2010 - Mark Costello
@@ -20,18 +21,21 @@ def fromQuaternion(quaternion):
 # % as the original owner
 
 
-def fromEulerAngle(euler):
-    [phi, theta, psi] = euler
-    ct = cos(theta)
-    st = sin(theta)
-    sp = sin(phi)
-    cp = cos(phi)
-    ss = sin(psi)
-    cs = cos(psi)
+def fromEulerAngle(euler: list[float]):
+    assert(euler.shape == (3, 1))
 
-    out = np.matrix([
+    [phi, theta, psi] = euler.flat
+    ct: float = cos(theta)
+    st: float = sin(theta)
+    sp: float = sin(phi)
+    cp: float = cos(phi)
+    ss: float = sin(psi)
+    cs: float = cos(psi)
+
+    out = np.array([
         [ct*cs,  sp*st*cs-cp*ss, cp*st*cs+sp*ss],
         [ct*ss,  sp*st*ss+cp*cs, cp*st*ss-sp*cs],
         [-st,    sp*ct,          cp*ct]
-    ])
+    ], dtype=float)
+    assert(out.shape == (3, 3))
     return out
