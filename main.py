@@ -26,13 +26,38 @@ for i in range(len(t_out)):
 print("End of Simulation")
 view_state = np.array(view_state)
 
+figure = plt.figure()
+ax = figure.add_subplot(2, 2, 1, projection='3d')
+ax.plot3D(view_state[:, 0]*1e-3,
+          view_state[:, 1]*1e-3,
+          view_state[:, 2]*1e-3, 'red')
+
 u, v = np.mgrid[0:2*np.pi:10j, 0:np.pi:20j]
 x = R*1e-3*np.cos(u)*np.sin(v)
 y = R*1e-3*np.sin(u)*np.sin(v)
 z = R*1e-3*np.cos(v)
 ax.plot_wireframe(x, y, z, color="lightblue", alpha=0.8)
-# plt.plot(t_out, xs, color="red")
-# plt.plot(t_out, ys, color="green")
-# plt.plot(t_out, zs, color="blue")
+plt.legend(['Orbit'])
+plt.title("LEO Orbit")
+
+# attitudes = plt.figure()
+plt.subplot(2, 2, 2)
+plt.plot(t_out, view_state[:, 6:10])
+plt.legend(["q0", "q1", "q2", "q3"])
+plt.title("Attitudes")
+plt.grid()
+
+plt.subplot(2, 2, 3)
+plt.plot(t_out, view_state[:, 10:13])
+plt.legend(["p", "q", "r"])
+plt.title("Angular Velocities")
+plt.grid()
+
+
+plt.subplot(2, 2, 4)
+plt.plot(t_out, view_state[:, 13:16])
+plt.legend(["B_x", "B_y", "B_z"])
+plt.title("Magnetic Field")
+plt.grid()
 
 plt.show()
