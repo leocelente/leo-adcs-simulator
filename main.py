@@ -14,24 +14,17 @@ tfinal: float = period*number_of_orbits
 timestep: float = 1.0
 t_out = np.arange(0.0, tfinal, timestep, dtype=float)
 
-position: list[float] = [[], [], []]
-
+view_state = []
 print("Start of Simulation")
 for i in range(len(t_out)):
     if i % 250 == 0:
         print("T=", i)
 
     state = RK4(Satellite.Model, state, t_out[i], timestep)
-    position[0].append(state[0, 0]*1e-3)
-    position[1].append(state[1, 0]*1e-3)
-    position[2].append(state[2, 0]*1e-3)
-
+    view_state.append(state[0:16, 0])
 
 print("End of Simulation")
-fig = plt.figure()
-ax = plt.axes(projection='3d')
-ax.plot3D(position[0], position[1],
-          position[2], 'red')
+view_state = np.array(view_state)
 
 u, v = np.mgrid[0:2*np.pi:10j, 0:np.pi:20j]
 x = R*1e-3*np.cos(u)*np.sin(v)
