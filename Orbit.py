@@ -22,7 +22,7 @@ psi0: float = 0
 ptp0 = np.array([[phi0, theta0, psi0]], dtype=float).T
 q0123_0 = Quaternion.fromEulerAngle(ptp0)
 p0: float = 0.08
-q0: float = -0.02
+qq0: float = -0.02
 r0: float = 0.03
 
 
