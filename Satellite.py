@@ -32,21 +32,17 @@ def attitudeModel(quaternion, w):
     return quaternion_dot
 
 
-def accelerationModel(xyz):
-    rho: float = np.linalg.norm(xyz)
-    rhat: float = xyz/rho
+def accelerationModel(position: list[float]):
+    rho: float = np.linalg.norm(position)
+    rhat: float = position/rho
     Fgrav: list[float] = -(G*M*m/rho**2)*rhat
     accel: list[float] = Fgrav/m
     return accel
 
 
-def velocityModel(vel):
-    return vel
-
-
-def magneticModel(xyz, posAngle):
+def magneticModel(position, posAngle):
+    rho: float = np.linalg.norm(position)
     phiE, thetaE, psiE = posAngle.flat
-    rho: float = np.linalg.norm(xyz)
     latitude: float = 90 - thetaE * (180/pi)
     longitude: float = psiE * (180/pi)
     rho_km: float = (rho) / 1000
@@ -58,9 +54,9 @@ def magneticModel(xyz, posAngle):
     return BNED
 
 
-def polar(xyz):
-    x, y, z = xyz
-    rho: float = np.linalg.norm(xyz)
+def polar(position):
+    x, y, z = position
+    rho: float = np.linalg.norm(position)
     phiE: float = 0.
     thetaE: float = acos(z/rho)
     psiE: float = atan2(y, x)
@@ -87,10 +83,10 @@ def Model(t: float, state: list[float]):
     assert(state.shape == (16, 1))
 
     angular_speed = state[10:13]
-
     quaternion = state[6:10]
     quaternion_dot = attitudeModel(quaternion, angular_speed)
 
+    position_cartesian = state[0:3]
     acceleration = accelerationModel(position_cartesian)
 
     if t % 20 == 0:
