@@ -5,8 +5,9 @@ from matplotlib import pyplot as plt
 from Earth import R
 
 [q0, q1, q2, q3] = np.ravel(q0123_0.T).tolist()
+BB = np.array([[0, 0, 0]], dtype=float).T
 state = np.array([[x0, y0, z0, x_dot0, y_dot0, z_dot0,
-                  q0, q1, q2, q3, p0, q0, r0]], dtype=float).T
+                  q0, q1, q2, q3, p0, qq0, r0, BB[0, 0], BB[1, 0], BB[2, 0]]], dtype=float).T
 
 number_of_orbits: float = 1
 tfinal: float = period*number_of_orbits

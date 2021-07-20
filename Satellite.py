@@ -84,8 +84,8 @@ def Model(t: float, state: list[float]):
     """
         Returns the change, d state/dt
     """
-    assert(state.shape == (13, 1))
-    position_cartesian = state[0:3]
+    assert(state.shape == (16, 1))
+
     angular_speed = state[10:13]
 
     quaternion = state[6:10]
@@ -108,9 +108,9 @@ def Model(t: float, state: list[float]):
     velocity = state[3:6]
 
     dstate = np.vstack(
-        [velocity, acceleration, quaternion_dot, angular_acceleration])
+        [velocity, acceleration, quaternion_dot, angular_acceleration, bb])
 
-    assert(dstate.shape == (13, 1))
+    assert(dstate.shape == (16, 1))
     return dstate
 
 
