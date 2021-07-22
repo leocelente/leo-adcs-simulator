@@ -1,29 +1,20 @@
-import Quaternion
 import numpy as np
 from Earth import R, mu
 from math import pi, sqrt, sin, cos
 
 altitude: float = 600e3
-x0: float = R + altitude
-y0: float = 0.0
-z0: float = 0.0
+position_0 = np.array([[R + altitude, 0, 0]], dtype=float).T
 
 orbit_inclination: float = 54.24 * (pi/180)
-semi_major: float = np.linalg.norm([x0, y0, z0])
+semi_major: float = np.linalg.norm(position_0)
 circular_vel: float = sqrt(mu/semi_major)
-
-x_dot0: float = 0
-y_dot0: float = circular_vel * cos(orbit_inclination)
-z_dot0: float = circular_vel * sin(orbit_inclination)
-
-phi0: float = 0
-theta0: float = 0
-psi0: float = 0
-ptp0 = np.array([[phi0, theta0, psi0]], dtype=float).T
-q0123_0 = Quaternion.fromEulerAngle(ptp0)
-p0: float = 0.08
-qq0: float = -0.02
-r0: float = 0.03
-
-
 period: float = 2*pi/sqrt(mu)*semi_major**(3/2)
+
+vel_y_0: float = circular_vel * cos(orbit_inclination)
+vel_z_0: float = circular_vel * sin(orbit_inclination)
+velocity_0 = np.array([[0, vel_y_0, vel_z_0]], dtype=float).T
+
+attitude_0 = np.array([[1, 0, 0, 0]], dtype=float).T
+omega_0 = np.array([[0.08, -0.02, 0.03]], dtype=float).T
+
+BB = np.array([[0, 0, 0]], dtype=float).T

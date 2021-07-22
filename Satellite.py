@@ -22,13 +22,14 @@ def rotationModel(w, torques):
 
 
 def attitudeModel(quaternion, w):
-    p, q, r = w
     assert(quaternion.shape == (4, 1))
+    assert(w.shape == (3, 1))
+    p, q, r = w
     PQRMAT = np.array([[0, -p, -q, -r], [p, 0, r, -q],
                        [q, -r, 0, p], [r, q, -p, 0]],  dtype=float)
     quaternion_dot = 0.5*PQRMAT @ quaternion
-    assert(quaternion_dot.shape == (4, 1))
     quaternion_dot = np.reshape(quaternion_dot, (4, 1))
+    assert(quaternion_dot.shape == (4, 1))
     return quaternion_dot
 
 

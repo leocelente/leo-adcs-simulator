@@ -18,11 +18,6 @@ def fromQuaternion(quaternion: list[float]):
     assert(DCM.shape == (3, 3))
     return DCM
 
-# % Matrix originally adopted from Boom 2010 - Mark Costello
-# % Copyright - Carlos Montalvo 2015
-# % You may freely distribute this file but please keep my name in here
-# % as the original owner
-
 
 def fromEulerAngle(euler: list[float]):
     '''
@@ -32,18 +27,19 @@ def fromEulerAngle(euler: list[float]):
     '''
     assert(euler.shape == (3, 1))
 
-    [phi, theta, psi] = euler.flat
-    ct: float = cos(theta)
-    st: float = sin(theta)
-    sp: float = sin(phi)
-    cp: float = cos(phi)
-    ss: float = sin(psi)
-    cs: float = cos(psi)
+    [yaw, pitch, roll] = euler.flat
+    cp: float = cos(pitch)
+    sp: float = sin(pitch)
+    sy: float = sin(yaw)
+    cy: float = cos(yaw)
+    sr: float = sin(roll)
+    cr: float = cos(roll)
 
-    out = np.array([
-        [ct*cs,  sp*st*cs-cp*ss, cp*st*cs+sp*ss],
-        [ct*ss,  sp*st*ss+cp*cs, cp*st*ss-sp*cs],
-        [-st,    sp*ct,          cp*ct]
+    DCM = np.array([
+        [cp*cr,  sy*sp*cr-cy*sr, cy*sp*cr+sy*sr],
+        [cp*sr,  sy*sp*sr+cy*cr, cy*sp*sr-sy*cr],
+        [-sp,    sy*cp,          cy*cp]
     ], dtype=float)
-    assert(out.shape == (3, 3))
-    return out
+
+    assert(DCM.shape == (3, 3))
+    return DCM

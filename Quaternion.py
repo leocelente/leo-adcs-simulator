@@ -12,22 +12,22 @@ def fromEulerAngle(euler: list[float]):
     '''
 
     assert(euler.shape == (3, 1))
-    phi: float = euler[0]
-    theta: float = euler[1]
-    psi: float = euler[2]
 
-    q0 = cos(phi/2)*cos(theta/2)*cos(psi/2) + \
-        sin(phi/2)*sin(theta/2)*sin(psi/2)
-    q1 = sin(phi/2)*cos(theta/2)*cos(psi/2) - \
-        cos(phi/2)*sin(theta/2)*sin(psi/2)
-    q2 = cos(phi/2)*sin(theta/2)*cos(psi/2) + \
-        sin(phi/2)*cos(theta/2)*sin(psi/2)
-    q3 = cos(phi/2)*cos(theta/2)*sin(psi/2) - \
-        sin(phi/2)*sin(theta/2)*cos(psi/2)
+    [yaw, pitch, roll] = euler.flat
+
+    cy = cos(yaw/2)
+    cp = cos(pitch/2)
+    cr = cos(roll/2)
+    sy = sin(yaw/2)
+    sp = sin(pitch/2)
+    sr = sin(roll/2)
+
+    q0 = cy * cp * cr + sy * sp * sr
+    q1 = sy * cp * cr - cy * sp * sr
+    q2 = cy * sp * cr + sy * cp * sr
+    q3 = cy * cp * sr - sy * sp * cr
+
     out = np.array([[q0, q1, q2, q3]], dtype=float).T
     assert(out.shape == (4, 1))
+
     return out
-# Original MATLAB code copyright comment
-# % Copyright - Carlos Montalvo 2015
-# % You may freely distribute this file but please keep my name in here
-# % as the original owner
