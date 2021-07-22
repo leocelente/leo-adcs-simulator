@@ -3,6 +3,11 @@ import numpy as np
 
 
 def RK4(model: Callable[[float, list[float]], list[float]], state_prev: list[float], t_now: float, t_step: float):
+    '''
+    Range-Kutta 4\nIntegra o estado `state_prev` pelo modelo `model`
+    no passo `t_now` até o passo `t_now + t_step`
+    '''
+    assert(state_prev.shape == (16, 1))
     state_prev = np.ravel(state_prev)
     state_prev = np.reshape(state_prev, (16, 1))
     k1: list[float] = model(t_now, state_prev)

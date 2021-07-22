@@ -3,6 +3,14 @@ import numpy as np
 
 
 def fromEulerAngle(euler: list[float]):
+    '''
+    Converte da representação de angulos de Euler321,\n
+    `Yaw (1), Pitch (2), Roll (3)`
+    Para Quaternions\n
+    `[w, xi, yj, zk]`\n
+    Usada apenas para inicializar a atitude com angulos de euler
+    '''
+
     assert(euler.shape == (3, 1))
     phi: float = euler[0]
     theta: float = euler[1]

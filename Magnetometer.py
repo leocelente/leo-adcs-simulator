@@ -1,10 +1,9 @@
 from random import random
 
 
-def Model(BB: list[float]):
-    assert(BB.shape == (3, 1))
-    MagscaleBias: float = (4e-7)
-    MagFieldBias: float = MagscaleBias*(2*random()-1)
-    MagscaleNoise: float = (1e-5)
-    MagFieldNoise: float = MagscaleNoise*(2*random()-1)
-    return BB + MagFieldBias + MagFieldNoise
+def Model(B: list[float]):
+    '''
+    Modelo do Magnetometro. Aplica um bias e ruido
+    no sinal original
+    '''
+    assert(B.shape == (3, 1))

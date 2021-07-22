@@ -3,7 +3,10 @@ from math import cos, sin
 
 
 def fromQuaternion(quaternion: list[float]):
-    # % compute R such that v(inertial) = TIB v(body)
+    '''
+    Converte representação em Quaternion `[w, xi, yj, zk]`
+    para a matriz de cossenos (DCM)
+    '''
     assert(quaternion.shape == (4, 1))
     [q0, q1, q2, q3] = quaternion.flat
 
@@ -22,6 +25,11 @@ def fromQuaternion(quaternion: list[float]):
 
 
 def fromEulerAngle(euler: list[float]):
+    '''
+    Converte representação em angulos de Euler321\n
+    `Yaw (1), Pitch (2), Roll (3)` 
+    para a matriz de cossenos (DCM)
+    '''
     assert(euler.shape == (3, 1))
 
     [phi, theta, psi] = euler.flat
