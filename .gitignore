@@ -3,3 +3,5 @@ __pycache__/
 bin/
 lib/
 pyvenv.cfg
+*.csv
+.venv/
