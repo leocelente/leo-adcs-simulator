@@ -15,6 +15,6 @@ vel_z_0: float = circular_vel * np.sin(orbit_inclination)
 velocity_0 = np.array([[0, vel_y_0, vel_z_0]], dtype=float).T
 
 attitude_0 = np.array([[1, 0, 0, 0]], dtype=float).T
-omega_0 = np.array([[0.08, -0.02, 0.03]], dtype=float).T
+omega_0 = np.array([[0.04, -0.01, 0.01]], dtype=float).T
 
 BB = np.array([[0, 0, 0]], dtype=float).T
