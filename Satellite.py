@@ -49,13 +49,14 @@ def magneticModel(position, posAngle):
     rho_km: float = (rho) / 1000
     today = date.fromisoformat('2020-01-01')
     BNED = MagneticFieldModel(
-        today, glat=latitude, glon=longitude, alt_km=rho_km, itype=0)
+        today, glat=latitude, glon=longitude, alt_km=rho_km, itype=2)
     BNED = np.array([BNED.north, BNED.east, BNED.down], dtype=float)
-    BNED = BNED*1e-9
+    
+    assert(BNED.shape == (3, 1))
     return BNED
 
 
-def polar(position):
+def geocentric(position):
     x, y, z = position
     rho: float = np.linalg.norm(position)
     phiE: float = 0.
@@ -69,8 +70,9 @@ def propagateVector(v, pos_angles, q0123):
     assert(pos_angles.shape == (3, 1))
     BI = DCM.fromEulerAngle(pos_angles) @ v
     assert(BI.shape == (3, 1))
-    vv = DCM.fromQuaternion(q0123).T @ BI
-    return vv
+    body_B = DCM.fromQuaternion(q0123).T @ BI
+    body_B = body_B*1e-9
+    return body_B
 
 
 def Magnetorquer(state):
@@ -91,9 +93,10 @@ def Model(t: float, state: list[float]):
     acceleration = accelerationModel(position_cartesian)
 
     if t % 20 == 0:
-        position_polar = polar(position_cartesian)
-        BNED = magneticModel(position_cartesian, position_polar)
-        Model.BB = propagateVector(BNED, position_polar, quaternion)
+        pos_geocentric = geocentric(position_cartesian)
+        BNED = magneticModel(position_cartesian, pos_geocentric)
+        pos_geocentric[1, 0] = pos_geocentric[1, 0] + pi # TODO: WHY
+        Model.BB = propagateVector(BNED, pos_geocentric, quaternion)
 
     BfieldMeasured = Magnetometer.Model(Model.BB)
     pqrMeasured = Gyroscope.Model(angular_speed)
