@@ -106,10 +106,9 @@ def Model(t: float, state: list[float]):
     angular_acceleration = rotationModel(angular_speed, net_torques)
 
     velocity = state[3:6]
-    bb = Model.BB
 
     dstate = np.vstack(
-        [velocity, acceleration, quaternion_dot, angular_acceleration, bb])
+        [velocity, acceleration, quaternion_dot, angular_acceleration])
 
     assert(dstate.shape == (13, 1))
     return dstate

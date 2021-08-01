@@ -6,8 +6,7 @@ from Orbit import *
 print("Start of Simulation")
 
 state = np.vstack(
-    [position_0, velocity_0, attitude_0, omega_0, BB])
-
+    [position_0, velocity_0, attitude_0, omega_0])
 number_of_orbits: float = .3
 data, time = Simulate(number_of_orbits, state, status=Viz.status, timestep=1)
 
