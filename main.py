@@ -2,6 +2,7 @@ import numpy as np
 import Visualization as Viz
 from Simulator import Simulate
 from Orbit import *
+from Instrument import probe
 
 print("Start of Simulation")
 
@@ -13,8 +14,8 @@ data, time = Simulate(number_of_orbits, state, status=Viz.status, timestep=1)
 print("End of Simulation")
 
 data = np.array(data)
+data = np.concatenate((data, probe.get()), axis=1)
 
-
-np.savetxt("state.csv", data, delimiter=",")
+np.savetxt("simulation.csv", data)
 
 Viz.View(data, time)

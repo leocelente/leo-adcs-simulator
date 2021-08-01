@@ -8,6 +8,7 @@ from datetime import date
 import Magnetometer
 import Gyroscope
 import Filter
+from Instrument import probe
 
 m: float = 2.6
 I = np.diag([0.9, 0.9, 0.3])
@@ -98,9 +99,12 @@ def Model(t: float, state: list[float]):
         pos_geocentric[1, 0] = pos_geocentric[1, 0] + pi # TODO: WHY
         Model.BB = propagateVector(BNED, pos_geocentric, quaternion)
 
-    BfieldMeasured = Magnetometer.Model(Model.BB)
-    pqrMeasured = Gyroscope.Model(angular_speed)
-    [BfieldNav, pqrNav] = Filter.Estimate(BfieldMeasured, pqrMeasured)
+    measure_B = Magnetometer.Model(Model.BB)
+    measure_omega = Gyroscope.Model(angular_speed)
+    [est_B, est_omega] = Filter.Estimate(measure_B, measure_omega)
+    probe(est_omega, 1)
+    probe(est_B, 2)
+    probe(Model.BB)
 
     net_torques = Magnetorquer(state)
     angular_acceleration = rotationModel(angular_speed, net_torques)
