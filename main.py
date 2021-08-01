@@ -16,6 +16,6 @@ print("End of Simulation")
 data = np.array(data)
 data = np.concatenate((data, probe.get()), axis=1)
 
-np.savetxt("simulation.csv", data)
+np.savetxt("simulation.csv", data, delimiter=',')
 
 Viz.View(data, time)
